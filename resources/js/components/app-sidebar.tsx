@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
 import type { NavItem } from '@/types';
+import { Building2 } from 'lucide-react';
 
 const mainNavItems: NavItem[] = [
     {
@@ -22,6 +23,12 @@ const mainNavItems: NavItem[] = [
         href: dashboard(),
         icon: LayoutGrid,
     },
+        {
+        title: '部署管理',
+        href: '/admin/departments',
+        icon: Building2,
+    },
+
 ];
 
 const footerNavItems: NavItem[] = [

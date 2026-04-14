@@ -1,5 +1,5 @@
 import AppLayout from '@/layouts/app-layout';
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 
 type Department = {
     id: number;
@@ -19,7 +19,16 @@ export default function Index({ departments }: Props) {
             <Head title="部署管理" />
 
             <div className="p-6">
-                <h1 className="text-2xl font-bold">部署管理</h1>
+                <div className="flex items-center justify-between">
+                    <h1 className="text-2xl font-bold">部署管理</h1>
+
+                    <Link
+                        href="/admin/departments/create"
+                        className="rounded-md bg-black px-4 py-2 text-sm text-white"
+                    >
+                        新規登録
+                    </Link>
+                </div>
 
                 <div className="mt-6 overflow-hidden rounded-lg border">
                     <table className="w-full text-left text-sm">
@@ -29,6 +38,7 @@ export default function Index({ departments }: Props) {
                                 <th className="px-4 py-3">部署名</th>
                                 <th className="px-4 py-3">表示順</th>
                                 <th className="px-4 py-3">状態</th>
+                                <th className="px-4 py-3">操作</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -40,12 +50,20 @@ export default function Index({ departments }: Props) {
                                     <td className="px-4 py-3">
                                         {department.is_active ? '有効' : '無効'}
                                     </td>
+                                    <td className="px-4 py-3">
+                                        <Link
+                                            href={`/admin/departments/${department.id}/edit`}
+                                            className="text-sm text-blue-600 underline"
+                                        >
+                                            編集
+                                        </Link>
+                                    </td>
                                 </tr>
                             ))}
 
                             {departments.length === 0 && (
                                 <tr>
-                                    <td colSpan={4} className="px-4 py-6 text-center text-gray-500">
+                                    <td colSpan={5} className="px-4 py-6 text-center text-gray-500">
                                         部署が登録されていません。
                                     </td>
                                 </tr>

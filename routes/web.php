@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DepartmentController;
+use App\Http\Controllers\Admin\PositionController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 
@@ -32,6 +33,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::put('/admin/departments/{department}', [DepartmentController::class, 'update'])
         ->name('admin.departments.update');
+
+    
+    Route::get('/admin/positions', [PositionController::class, 'index'])
+        ->name('admin.positions.index');
 });
 
 require __DIR__.'/settings.php';

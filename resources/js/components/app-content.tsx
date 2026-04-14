@@ -17,6 +17,7 @@ export function AppContent({ variant = 'sidebar', children, ...props }: Props) {
             {...props}
         >
             {children}
+           
         </main>
     );
 }

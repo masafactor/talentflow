@@ -1,6 +1,8 @@
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import FormEventHandler = React.FormEventHandler;
+import FlashMessage from '@/components/flash-message';
+
 
 type Department = {
     id: number;
@@ -42,6 +44,11 @@ export default function Edit({ department }: Props) {
                         一覧へ戻る
                     </Link>
                 </div>
+
+                <div className="mt-4">
+                    <FlashMessage />
+                </div>
+
 
                 <form onSubmit={submit} className="mt-6 space-y-6 rounded-lg border p-6">
                     <div>

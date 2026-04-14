@@ -1,5 +1,6 @@
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link } from '@inertiajs/react';
+import FlashMessage from '@/components/flash-message';
 
 type Department = {
     id: number;
@@ -28,6 +29,10 @@ export default function Index({ departments }: Props) {
                     >
                         新規登録
                     </Link>
+                </div>
+
+                <div className="mt-4">
+                    <FlashMessage />
                 </div>
 
                 <div className="mt-6 overflow-hidden rounded-lg border">

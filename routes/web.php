@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DepartmentController;
+use App\Http\Controllers\Admin\EmploymentTypeController;
 use App\Http\Controllers\Admin\PositionController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
@@ -45,6 +46,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('admin.positions.edit');
     Route::put('/admin/positions/{position}', [PositionController::class, 'update'])
         ->name('admin.positions.update');
+
+
+    Route::get('/admin/employment-types', [EmploymentTypeController::class, 'index'])
+        ->name('admin.employment-types.index');
+    Route::get('/admin/employment-types/create', [EmploymentTypeController::class, 'create'])
+        ->name('admin.employment-types.create');
+    Route::post('/admin/employment-types', [EmploymentTypeController::class, 'store'])
+        ->name('admin.employment-types.store');
+    Route::get('/admin/employment-types/{employmentType}/edit', [EmploymentTypeController::class, 'edit'])
+        ->name('admin.employment-types.edit');
+    Route::put('/admin/employment-types/{employmentType}', [EmploymentTypeController::class, 'update'])
+        ->name('admin.employment-types.update');
 });
 
 require __DIR__.'/settings.php';

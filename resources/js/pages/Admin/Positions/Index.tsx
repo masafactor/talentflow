@@ -1,6 +1,6 @@
 import FlashMessage from '@/components/flash-message';
 import AppLayout from '@/layouts/app-layout';
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 
 type Position = {
     id: number;
@@ -20,7 +20,16 @@ export default function Index({ positions }: Props) {
             <Head title="役職管理" />
 
             <div className="p-6">
-                <h1 className="text-2xl font-bold">役職管理</h1>
+                <div className="flex items-center justify-between">
+                    <h1 className="text-2xl font-bold">役職管理</h1>
+
+                    <Link
+                        href="/admin/positions/create"
+                        className="rounded-md bg-black px-4 py-2 text-sm text-white"
+                    >
+                        新規登録
+                    </Link>
+                </div>
 
                 <div className="mt-4">
                     <FlashMessage />
@@ -48,7 +57,14 @@ export default function Index({ positions }: Props) {
                                     <td className="px-4 py-3">
                                         {position.is_active ? '有効' : '無効'}
                                     </td>
-                                    <td className="px-4 py-3">-</td>
+                                    <td className="px-4 py-3">
+                                        <Link
+                                            href={`/admin/positions/${position.id}/edit`}
+                                            className="text-sm text-blue-600 underline"
+                                        >
+                                            編集
+                                        </Link>
+                                    </td>
                                 </tr>
                             ))}
 

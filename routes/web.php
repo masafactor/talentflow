@@ -37,6 +37,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     
     Route::get('/admin/positions', [PositionController::class, 'index'])
         ->name('admin.positions.index');
+    Route::get('/admin/positions/create', [PositionController::class, 'create'])
+        ->name('admin.positions.create');
+    Route::post('/admin/positions', [PositionController::class, 'store'])
+        ->name('admin.positions.store');
+    Route::get('/admin/positions/{position}/edit', [PositionController::class, 'edit'])
+        ->name('admin.positions.edit');
+    Route::put('/admin/positions/{position}', [PositionController::class, 'update'])
+        ->name('admin.positions.update');
 });
 
 require __DIR__.'/settings.php';

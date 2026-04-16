@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { BookOpen, Briefcase, FolderGit2, LayoutGrid, Users } from 'lucide-react';
+import { BookOpen, Briefcase, FolderGit2, IdCard, LayoutGrid, Users } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -23,22 +23,28 @@ const mainNavItems: NavItem[] = [
         href: dashboard(),
         icon: LayoutGrid,
     },
-        {
+    {
         title: '部署管理',
         href: '/admin/departments',
         icon: Building2,
     },
 
     {
-    title: '役職管理',
-    href: '/admin/positions',
-    icon: Briefcase,
+        title: '役職管理',
+        href: '/admin/positions',
+        icon: Briefcase,
     },
     {
-    title: '雇用形態管理',
-    href: '/admin/employment-types',
-    icon: Users,
+        title: '雇用形態管理',
+        href: '/admin/employment-types',
+        icon: Users,
     },
+    {
+        title: '社員管理',
+        href: '/admin/employees',
+        icon: IdCard,
+    },
+    
 
 ];
 

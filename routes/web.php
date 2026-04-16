@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DepartmentController;
+use App\Http\Controllers\Admin\EmployeeController;
 use App\Http\Controllers\Admin\EmploymentTypeController;
 use App\Http\Controllers\Admin\PositionController;
 use Illuminate\Support\Facades\Route;
@@ -58,6 +59,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('admin.employment-types.edit');
     Route::put('/admin/employment-types/{employmentType}', [EmploymentTypeController::class, 'update'])
         ->name('admin.employment-types.update');
+
+    Route::get('/admin/employees', [EmployeeController::class, 'index'])
+        ->name('admin.employees.index');
+    Route::get('/admin/employees/create', [EmployeeController::class, 'create'])
+        ->name('admin.employees.create');
+    Route::post('/admin/employees', [EmployeeController::class, 'store'])
+        ->name('admin.employees.store');
+    Route::get('/admin/employees/{employee}/edit', [EmployeeController::class, 'edit'])
+        ->name('admin.employees.edit');
+    Route::put('/admin/employees/{employee}', [EmployeeController::class, 'update'])
+        ->name('admin.employees.update');
 });
 
 require __DIR__.'/settings.php';

@@ -63,6 +63,7 @@ export default function Index({ employees }: Props) {
                                 <th className="px-4 py-3">役職</th>
                                 <th className="px-4 py-3">雇用形態</th>
                                 <th className="px-4 py-3">状態</th>
+                                <th className="px-4 py-3">操作</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -78,12 +79,20 @@ export default function Index({ employees }: Props) {
                                         {employee.employment_type?.name ?? '-'}
                                     </td>
                                     <td className="px-4 py-3">{statusLabels[employee.status]}</td>
+                                    <td className="px-4 py-3">
+                                        <Link
+                                            href={`/admin/employees/${employee.id}/edit`}
+                                            className="text-sm text-blue-600 underline"
+                                        >
+                                            編集
+                                        </Link>
+                                    </td>
                                 </tr>
                             ))}
 
                             {employees.length === 0 && (
                                 <tr>
-                                    <td colSpan={6} className="px-4 py-6 text-center text-gray-500">
+                                    <td colSpan={7} className="px-4 py-6 text-center text-gray-500">
                                         社員が登録されていません。
                                     </td>
                                 </tr>

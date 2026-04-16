@@ -14,16 +14,53 @@ use Inertia\Response;
 
 class EmployeeController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
+        $filters = $request->only([
+            'keyword',
+            'department_id',
+            'employment_type_id',
+            'status',
+        ]);
+
         $employees = Employee::query()
             ->with(['department', 'position', 'employmentType'])
+            ->when($filters['keyword'] ?? null, function ($query, $keyword) {
+                $query->where(function ($q) use ($keyword) {
+                    $q->where('employee_number', 'like', "%{$keyword}%")
+                        ->orWhere('last_name', 'like', "%{$keyword}%")
+                        ->orWhere('first_name', 'like', "%{$keyword}%")
+                        ->orWhere('last_name_kana', 'like', "%{$keyword}%")
+                        ->orWhere('first_name_kana', 'like', "%{$keyword}%")
+                        ->orWhere('email', 'like', "%{$keyword}%");
+                });
+            })
+            ->when($filters['department_id'] ?? null, function ($query, $departmentId) {
+                $query->where('department_id', $departmentId);
+            })
+            ->when($filters['employment_type_id'] ?? null, function ($query, $employmentTypeId) {
+                $query->where('employment_type_id', $employmentTypeId);
+            })
+            ->when($filters['status'] ?? null, function ($query, $status) {
+                $query->where('status', $status);
+            })
             ->orderBy('employee_number')
             ->orderBy('id')
             ->get();
 
         return Inertia::render('Admin/Employees/Index', [
             'employees' => $employees,
+            'filters' => $filters,
+            'departments' => Department::query()
+                ->where('is_active', true)
+                ->orderBy('display_order')
+                ->orderBy('id')
+                ->get(['id', 'name']),
+            'employmentTypes' => EmploymentType::query()
+                ->where('is_active', true)
+                ->orderBy('display_order')
+                ->orderBy('id')
+                ->get(['id', 'name']),
         ]);
     }
 
@@ -77,6 +114,15 @@ class EmployeeController extends Controller
         return redirect()
             ->route('admin.employees.index')
             ->with('success', '社員を登録しました。');
+    }
+
+    public function show(Employee $employee): Response
+    {
+        $employee->load(['department', 'position', 'employmentType']);
+
+        return Inertia::render('Admin/Employees/Show', [
+            'employee' => $employee,
+        ]);
     }
 
     public function edit(Employee $employee): Response

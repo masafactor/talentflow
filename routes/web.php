@@ -70,6 +70,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('admin.employees.edit');
     Route::put('/admin/employees/{employee}', [EmployeeController::class, 'update'])
         ->name('admin.employees.update');
+    Route::get('/admin/employees/{employee}', [EmployeeController::class, 'show'])
+    ->name('admin.employees.show');
 });
 
 require __DIR__.'/settings.php';

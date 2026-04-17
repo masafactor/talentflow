@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\Admin\EmployeeController;
 use App\Http\Controllers\Admin\EmploymentTypeController;
+use App\Http\Controllers\Admin\JobPostingController;
 use App\Http\Controllers\Admin\PositionController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
@@ -72,6 +73,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('admin.employees.update');
     Route::get('/admin/employees/{employee}', [EmployeeController::class, 'show'])
     ->name('admin.employees.show');
+
+
+    Route::get('/admin/job-postings', [JobPostingController::class, 'index'])
+    ->name('admin.job-postings.index');
+    Route::get('/admin/job-postings/create', [JobPostingController::class, 'create'])
+        ->name('admin.job-postings.create');
+    Route::post('/admin/job-postings', [JobPostingController::class, 'store'])
+        ->name('admin.job-postings.store');
+    Route::get('/admin/job-postings/{jobPosting}/edit', [JobPostingController::class, 'edit'])
+        ->name('admin.job-postings.edit');
+    Route::put('/admin/job-postings/{jobPosting}', [JobPostingController::class, 'update'])
+        ->name('admin.job-postings.update');
 });
 
 require __DIR__.'/settings.php';

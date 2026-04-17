@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { BookOpen, Briefcase, BriefcaseBusiness, FolderGit2, IdCard, LayoutGrid, Users } from 'lucide-react';
+import { BookOpen, Briefcase, BriefcaseBusiness, FolderGit2, IdCard, LayoutGrid, UserRoundSearch, Users } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -49,6 +49,13 @@ const mainNavItems: NavItem[] = [
     href: '/admin/job-postings',
     icon: BriefcaseBusiness,
     },
+    {
+    title: '応募者管理',
+    href: '/admin/candidates',
+    icon: UserRoundSearch,
+},
+
+    
     
 
 ];

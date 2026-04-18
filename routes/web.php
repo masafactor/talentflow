@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\EmployeeController;
 use App\Http\Controllers\Admin\EmploymentTypeController;
 use App\Http\Controllers\Admin\JobPostingController;
 use App\Http\Controllers\Admin\PositionController;
+use App\Http\Controllers\Admin\RecruitmentRouteController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 
@@ -109,6 +110,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('admin.applications.edit');
     Route::put('/admin/applications/{application}', [ApplicationController::class, 'update'])
         ->name('admin.applications.update');
+
+    Route::get('/admin/recruitment-routes', [RecruitmentRouteController::class, 'index'])
+    ->name('admin.recruitment-routes.index');
+    Route::get('/admin/recruitment-routes/create', [RecruitmentRouteController::class, 'create'])
+        ->name('admin.recruitment-routes.create');
+    Route::post('/admin/recruitment-routes', [RecruitmentRouteController::class, 'store'])
+        ->name('admin.recruitment-routes.store');
+    Route::get('/admin/recruitment-routes/{recruitmentRoute}/edit', [RecruitmentRouteController::class, 'edit'])
+        ->name('admin.recruitment-routes.edit');
+    Route::put('/admin/recruitment-routes/{recruitmentRoute}', [RecruitmentRouteController::class, 'update'])
+        ->name('admin.recruitment-routes.update');
 
     
 });

@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { BookOpen, Briefcase, BriefcaseBusiness, FileUser, FolderGit2, IdCard, LayoutGrid, UserRoundSearch, Users } from 'lucide-react';
+import { BookOpen, Briefcase, BriefcaseBusiness, FileUser, FolderGit2, IdCard, LayoutGrid, Route, UserRoundSearch, Users } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -58,7 +58,12 @@ const mainNavItems: NavItem[] = [
     title: '応募管理',
     href: '/admin/applications',
     icon: FileUser,
-},
+    },
+    {
+    title: '採用経路管理',
+    href: '/admin/recruitment-routes',
+    icon: Route,
+    },
     
 
 

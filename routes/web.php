@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ApplicationController;
 use App\Http\Controllers\Admin\CandidateController;
 use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\Admin\EmployeeController;
@@ -97,6 +98,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('admin.candidates.edit');
     Route::put('/admin/candidates/{candidate}', [CandidateController::class, 'update'])
         ->name('admin.candidates.update');
+
+    Route::get('/admin/applications', [ApplicationController::class, 'index'])
+    ->name('admin.applications.index');
+    Route::get('/admin/applications/create', [ApplicationController::class, 'create'])
+        ->name('admin.applications.create');
+    Route::post('/admin/applications', [ApplicationController::class, 'store'])
+        ->name('admin.applications.store');
+    Route::get('/admin/applications/{application}/edit', [ApplicationController::class, 'edit'])
+        ->name('admin.applications.edit');
+    Route::put('/admin/applications/{application}', [ApplicationController::class, 'update'])
+        ->name('admin.applications.update');
 
     
 });

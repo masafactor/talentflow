@@ -122,6 +122,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/admin/recruitment-routes/{recruitmentRoute}', [RecruitmentRouteController::class, 'update'])
         ->name('admin.recruitment-routes.update');
 
+    Route::get('/admin/applications/{application}', [ApplicationController::class, 'show'])
+    ->name('admin.applications.show');
     
 });
 

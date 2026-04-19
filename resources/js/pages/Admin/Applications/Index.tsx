@@ -104,6 +104,13 @@ export default function Index({ applications }: Props) {
                                     </td>
                                     <td className="px-4 py-3">{statusLabels[application.status]}</td>
                                     <td className="px-4 py-3">
+
+                                        <Link
+                                            href={`/admin/applications/${application.id}`}
+                                            className="text-sm text-sky-600 underline"
+                                        >
+                                            詳細
+                                        </Link>
                                         <Link
                                             href={`/admin/applications/${application.id}/edit`}
                                             className="text-sm text-blue-600 underline"

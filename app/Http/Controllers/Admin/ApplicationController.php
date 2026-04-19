@@ -103,37 +103,37 @@ class ApplicationController extends Controller
             ->with('success', '応募情報を登録しました。');
     }
 
-    public function edit(Application $application): Response
-    {
-        $application->load([
-            'statusHistories.changedBy',
-        ]);
+public function edit(Application $application): Response
+{
+    $application->load([
+        'statusHistories.changedBy',
+    ]);
 
-        return Inertia::render('Admin/Applications/Edit', [
-            'application' => $application,
-            'candidates' => Candidate::query()
-                ->orderByDesc('id')
-                ->get(['id', 'last_name', 'first_name']),
-            'jobPostings' => JobPosting::query()
-                ->orderByDesc('id')
-                ->get(['id', 'title']),
-            'recruitmentRoutes' => RecruitmentRoute::query()
-                ->where('is_active', true)
-                ->orderBy('display_order')
-                ->orderBy('id')
-                ->get(['id', 'name', 'type']),
-            'employees' => Employee::query()
-                ->where('status', 'active')
-                ->orderBy('employee_number')
-                ->orderBy('id')
-                ->get(['id', 'employee_number', 'last_name', 'first_name']),
-            'statusHistories' => $application->statusHistories()
-                ->with('changedBy:id,name')
-                ->orderByDesc('changed_at')
-                ->orderByDesc('id')
-                ->get(),
-        ]);
-    }
+    return Inertia::render('Admin/Applications/Edit', [
+        'application' => $application,
+        'candidates' => Candidate::query()
+            ->orderByDesc('id')
+            ->get(['id', 'last_name', 'first_name']),
+        'jobPostings' => JobPosting::query()
+            ->orderByDesc('id')
+            ->get(['id', 'title']),
+        'recruitmentRoutes' => RecruitmentRoute::query()
+            ->where('is_active', true)
+            ->orderBy('display_order')
+            ->orderBy('id')
+            ->get(['id', 'name', 'type']),
+        'employees' => Employee::query()
+            ->where('status', 'active')
+            ->orderBy('employee_number')
+            ->orderBy('id')
+            ->get(['id', 'employee_number', 'last_name', 'first_name']),
+        'statusHistories' => $application->statusHistories()
+            ->with('changedBy:id,name')
+            ->orderByDesc('changed_at')
+            ->orderByDesc('id')
+            ->get(),
+    ]);
+}
 
     public function update(Request $request, Application $application): RedirectResponse
     {
@@ -186,5 +186,26 @@ class ApplicationController extends Controller
         return redirect()
             ->route('admin.applications.index')
             ->with('success', '応募情報を更新しました。');
+    }
+
+    public function show(Application $application): Response
+    {
+        $application->load([
+            'candidate',
+            'jobPosting.department',
+            'jobPosting.employmentType',
+            'recruitmentRoute',
+            'referrerEmployee',
+            'statusHistories.changedBy',
+        ]);
+
+        return Inertia::render('Admin/Applications/Show', [
+            'application' => $application,
+            'statusHistories' => $application->statusHistories()
+                ->with('changedBy:id,name')
+                ->orderByDesc('changed_at')
+                ->orderByDesc('id')
+                ->get(),
+        ]);
     }
 }

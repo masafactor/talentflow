@@ -51,4 +51,8 @@ class Application extends Model
     {
         return $this->hasMany(ApplicationStatusHistory::class);
     }
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class);
+    }
 }

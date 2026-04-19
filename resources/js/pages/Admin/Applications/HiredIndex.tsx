@@ -4,16 +4,6 @@ import { Head, Link } from '@inertiajs/react';
 
 type Application = {
     id: number;
-    status:
-        | 'applied'
-        | 'screening'
-        | 'first_interview'
-        | 'second_interview'
-        | 'final_interview'
-        | 'offered'
-        | 'hired'
-        | 'rejected'
-        | 'declined';
     applied_on: string;
     candidate: {
         id: number;
@@ -23,16 +13,18 @@ type Application = {
     job_posting: {
         id: number;
         title: string;
+        department: {
+            id: number;
+            name: string;
+        } | null;
+        employment_type: {
+            id: number;
+            name: string;
+        } | null;
     };
     recruitment_route: {
         id: number;
         name: string;
-    } | null;
-    referrer_employee: {
-        id: number;
-        employee_number: string;
-        last_name: string;
-        first_name: string;
     } | null;
 };
 
@@ -40,44 +32,29 @@ type Props = {
     applications: Application[];
 };
 
-const statusLabels: Record<Application['status'], string> = {
-    applied: '応募済み',
-    screening: '書類選考中',
-    first_interview: '一次面接',
-    second_interview: '二次面接',
-    final_interview: '最終面接',
-    offered: '内定',
-    hired: '採用',
-    rejected: '不採用',
-    declined: '辞退',
-};
-
-export default function Index({ applications }: Props) {
+export default function HiredIndex({ applications }: Props) {
     return (
         <AppLayout>
-            <Head title="応募管理" />
+            <Head title="採用通過者一覧" />
 
             <div className="p-6">
                 <div className="flex items-center justify-between">
-                    <h1 className="text-2xl font-bold">応募管理</h1>
-
-                     <Link
-                        href="/admin/applications/hired"
-                        className="rounded-md border px-4 py-2 text-sm"
-                    >
-                        採用通過者一覧
-                    </Link>
+                    <h1 className="text-2xl font-bold">採用通過者一覧</h1>
 
                     <Link
-                        href="/admin/applications/create"
-                        className="rounded-md bg-black px-4 py-2 text-sm text-white"
+                        href="/admin/applications"
+                        className="rounded-md border px-4 py-2 text-sm"
                     >
-                        新規登録
+                        応募一覧へ戻る
                     </Link>
                 </div>
 
                 <div className="mt-4">
                     <FlashMessage />
+                </div>
+
+                <div className="mt-6 rounded-lg border p-4 text-sm text-gray-600">
+                    採用ステータスが「採用」で、まだ従業員登録されていない応募のみ表示しています。
                 </div>
 
                 <div className="mt-6 overflow-hidden rounded-lg border">
@@ -87,9 +64,9 @@ export default function Index({ applications }: Props) {
                                 <th className="px-4 py-3">応募日</th>
                                 <th className="px-4 py-3">応募者</th>
                                 <th className="px-4 py-3">求人</th>
+                                <th className="px-4 py-3">部署</th>
+                                <th className="px-4 py-3">雇用形態</th>
                                 <th className="px-4 py-3">採用経路</th>
-                                <th className="px-4 py-3">紹介者</th>
-                                <th className="px-4 py-3">ステータス</th>
                                 <th className="px-4 py-3">操作</th>
                             </tr>
                         </thead>
@@ -102,16 +79,15 @@ export default function Index({ applications }: Props) {
                                     </td>
                                     <td className="px-4 py-3">{application.job_posting.title}</td>
                                     <td className="px-4 py-3">
+                                        {application.job_posting.department?.name ?? '-'}
+                                    </td>
+                                    <td className="px-4 py-3">
+                                        {application.job_posting.employment_type?.name ?? '-'}
+                                    </td>
+                                    <td className="px-4 py-3">
                                         {application.recruitment_route?.name ?? '-'}
                                     </td>
-                                    <td className="px-4 py-3">
-                                        {application.referrer_employee
-                                            ? `${application.referrer_employee.employee_number} ${application.referrer_employee.last_name} ${application.referrer_employee.first_name}`
-                                            : '-'}
-                                    </td>
-                                    <td className="px-4 py-3">{statusLabels[application.status]}</td>
-                                    <td className="px-4 py-3">
-
+                                    <td className="px-4 py-3 space-x-3">
                                         <Link
                                             href={`/admin/applications/${application.id}`}
                                             className="text-sm text-sky-600 underline"
@@ -119,10 +95,10 @@ export default function Index({ applications }: Props) {
                                             詳細
                                         </Link>
                                         <Link
-                                            href={`/admin/applications/${application.id}/edit`}
-                                            className="text-sm text-blue-600 underline"
+                                            href={`/admin/applications/${application.id}/employee-create`}
+                                            className="text-sm text-emerald-600 underline"
                                         >
-                                            編集
+                                            従業員登録
                                         </Link>
                                     </td>
                                 </tr>
@@ -131,7 +107,7 @@ export default function Index({ applications }: Props) {
                             {applications.length === 0 && (
                                 <tr>
                                     <td colSpan={7} className="px-4 py-6 text-center text-gray-500">
-                                        応募情報が登録されていません。
+                                        従業員登録待ちの採用通過者はいません。
                                     </td>
                                 </tr>
                             )}

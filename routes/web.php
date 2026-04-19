@@ -102,6 +102,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/admin/applications', [ApplicationController::class, 'index'])
     ->name('admin.applications.index');
+
+    Route::get('/admin/applications/hired', [ApplicationController::class, 'hiredIndex'])
+    ->name('admin.applications.hired');
+
     Route::get('/admin/applications/create', [ApplicationController::class, 'create'])
         ->name('admin.applications.create');
     Route::post('/admin/applications', [ApplicationController::class, 'store'])
@@ -111,8 +115,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/admin/applications/{application}', [ApplicationController::class, 'update'])
         ->name('admin.applications.update');
 
+    Route::get('/admin/applications/{application}', [ApplicationController::class, 'show'])
+        ->name('admin.applications.show');
+
     Route::get('/admin/recruitment-routes', [RecruitmentRouteController::class, 'index'])
-    ->name('admin.recruitment-routes.index');
+        ->name('admin.recruitment-routes.index');
+
+    Route::get('/admin/applications/{application}/employee-create', [ApplicationController::class, 'employeeCreate'])
+        ->name('admin.applications.employee-create');
+
+    Route::post('/admin/applications/{application}/employee-register', [ApplicationController::class, 'employeeRegister'])
+        ->name('admin.applications.employee-register');
+
     Route::get('/admin/recruitment-routes/create', [RecruitmentRouteController::class, 'create'])
         ->name('admin.recruitment-routes.create');
     Route::post('/admin/recruitment-routes', [RecruitmentRouteController::class, 'store'])
@@ -122,8 +136,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/admin/recruitment-routes/{recruitmentRoute}', [RecruitmentRouteController::class, 'update'])
         ->name('admin.recruitment-routes.update');
 
-    Route::get('/admin/applications/{application}', [ApplicationController::class, 'show'])
-    ->name('admin.applications.show');
+
+
+
     
 });
 

@@ -106,6 +106,14 @@ export default function Show({ application, statusHistories }: Props) {
                     <h1 className="text-2xl font-bold">応募詳細</h1>
 
                     <div className="flex gap-3">
+                        {application.status === 'hired' && !application.employee_id && (
+                            <Link
+                                href={`/admin/applications/${application.id}/employee-create`}
+                                className="rounded-md bg-emerald-600 px-4 py-2 text-sm text-white"
+                            >
+                                従業員登録
+                            </Link>
+                        )}
                         <Link
                             href={`/admin/applications/${application.id}/edit`}
                             className="rounded-md bg-black px-4 py-2 text-sm text-white"

@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Validation\Rule;
+use App\Models\Position;
 
 class ApplicationController extends Controller
 {
@@ -208,4 +209,55 @@ public function edit(Application $application): Response
                 ->get(),
         ]);
     }
+    
+    public function hiredIndex(): Response
+{
+    $applications = Application::query()
+        ->with([
+            'candidate',
+            'jobPosting.department',
+            'jobPosting.employmentType',
+            'recruitmentRoute',
+        ])
+        ->where('status', 'hired')
+        ->whereNull('employee_id')
+        ->orderByDesc('applied_on')
+        ->orderByDesc('id')
+        ->get();
+
+    return Inertia::render('Admin/Applications/HiredIndex', [
+        'applications' => $applications,
+    ]);
+}
+
+public function employeeCreate(Application $application): Response|RedirectResponse
+{
+    $application->load([
+        'candidate',
+        'jobPosting.department',
+        'jobPosting.employmentType',
+        'employee',
+    ]);
+
+    if ($application->status !== 'hired') {
+        return redirect()
+            ->route('admin.applications.show', $application)
+            ->with('error', '採用済みの応募のみ従業員登録できます。');
+    }
+
+    if ($application->employee_id) {
+        return redirect()
+            ->route('admin.applications.show', $application)
+            ->with('error', 'この応募は既に従業員登録済みです。');
+    }
+
+    return Inertia::render('Admin/Applications/EmployeeCreate', [
+        'application' => $application,
+        'positions' => Position::query()
+            ->where('is_active', true)
+            ->orderBy('display_order')
+            ->orderBy('id')
+            ->get(['id', 'name']),
+    ]);
+}
 }

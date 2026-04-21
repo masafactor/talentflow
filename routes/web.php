@@ -10,6 +10,8 @@ use App\Http\Controllers\Admin\PositionController;
 use App\Http\Controllers\Admin\RecruitmentRouteController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
+use App\Http\Controllers\Admin\ApplicationInterviewController;
+
 
 Route::inertia('/', 'welcome', [
     'canRegister' => Features::enabled(Features::registration()),
@@ -138,6 +140,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('admin.recruitment-routes.edit');
     Route::put('/admin/recruitment-routes/{recruitmentRoute}', [RecruitmentRouteController::class, 'update'])
         ->name('admin.recruitment-routes.update');
+
+
+    Route::get('/admin/applications/{application}/interviews', [ApplicationInterviewController::class, 'index'])
+    ->name('admin.applications.interviews.index');
+
+    Route::get('/admin/applications/{application}/interviews/create', [ApplicationInterviewController::class, 'create'])
+        ->name('admin.applications.interviews.create');
+
+    Route::post('/admin/applications/{application}/interviews', [ApplicationInterviewController::class, 'store'])
+        ->name('admin.applications.interviews.store');
+
+    Route::get('/admin/applications/{application}/interviews/{interview}/edit', [ApplicationInterviewController::class, 'edit'])
+        ->name('admin.applications.interviews.edit');
+
+    Route::put('/admin/applications/{application}/interviews/{interview}', [ApplicationInterviewController::class, 'update'])
+        ->name('admin.applications.interviews.update');
 
 
 

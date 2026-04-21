@@ -86,8 +86,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('admin.job-postings.store');
     Route::get('/admin/job-postings/{jobPosting}/edit', [JobPostingController::class, 'edit'])
         ->name('admin.job-postings.edit');
+    Route::get('/admin/job-postings/{jobPosting}', [JobPostingController::class, 'show'])
+        ->name('admin.job-postings.show');
     Route::put('/admin/job-postings/{jobPosting}', [JobPostingController::class, 'update'])
         ->name('admin.job-postings.update');
+    
 
     Route::get('/admin/candidates', [CandidateController::class, 'index'])
     ->name('admin.candidates.index');

@@ -74,7 +74,13 @@ export default function Index({ jobPostings }: Props) {
                                     <td className="px-4 py-3">{statusLabels[jobPosting.status]}</td>
                                     <td className="px-4 py-3">{jobPosting.opened_on ?? '-'}</td>
                                     <td className="px-4 py-3">{jobPosting.closed_on ?? '-'}</td>
-                                    <td className="px-4 py-3">
+                                    <td className="px-4 py-3 space-x-3">
+                                        <Link
+                                            href={`/admin/job-postings/${jobPosting.id}`}
+                                            className="text-sm text-sky-600 underline"
+                                        >
+                                            詳細
+                                        </Link>
                                         <Link
                                             href={`/admin/job-postings/${jobPosting.id}/edit`}
                                             className="text-sm text-blue-600 underline"

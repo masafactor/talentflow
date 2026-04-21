@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Application;
 use App\Models\Department;
 use App\Models\EmploymentType;
 use App\Models\JobPosting;
@@ -108,5 +109,42 @@ class JobPostingController extends Controller
         return redirect()
             ->route('admin.job-postings.index')
             ->with('success', '求人を更新しました。');
+    }
+
+    public function show(JobPosting $jobPosting): Response
+    {
+        $jobPosting->load([
+            'department',
+            'employmentType',
+        ]);
+
+        $applications = Application::query()
+            ->with([
+                'candidate',
+                'recruitmentRoute',
+                'employee',
+            ])
+            ->where('job_posting_id', $jobPosting->id)
+            ->orderByDesc('applied_on')
+            ->orderByDesc('id')
+            ->get();
+
+        $summary = [
+            'total' => $applications->count(),
+            'screening' => $applications->where('status', 'screening')->count(),
+            'first_interview' => $applications->where('status', 'first_interview')->count(),
+            'second_interview' => $applications->where('status', 'second_interview')->count(),
+            'final_interview' => $applications->where('status', 'final_interview')->count(),
+            'offered' => $applications->where('status', 'offered')->count(),
+            'hired' => $applications->where('status', 'hired')->count(),
+            'rejected' => $applications->where('status', 'rejected')->count(),
+            'declined' => $applications->where('status', 'declined')->count(),
+        ];
+
+        return Inertia::render('Admin/JobPostings/Show', [
+            'jobPosting' => $jobPosting,
+            'applications' => $applications,
+            'summary' => $summary,
+        ]);
     }
 }

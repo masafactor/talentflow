@@ -118,10 +118,23 @@ class EmployeeController extends Controller
 
     public function show(Employee $employee): Response
     {
-        $employee->load(['department', 'position', 'employmentType']);
+        $employee->load([
+            'department',
+            'position',
+            'employmentType',
+            'assignments.department',
+            'assignments.position',
+            'assignments.employmentType',
+            'assignments.changedBy',
+        ]);
 
         return Inertia::render('Admin/Employees/Show', [
             'employee' => $employee,
+            'assignments' => $employee->assignments()
+                ->with(['department', 'position', 'employmentType', 'changedBy:id,name'])
+                ->orderByDesc('start_date')
+                ->orderByDesc('id')
+                ->get(),
         ]);
     }
 

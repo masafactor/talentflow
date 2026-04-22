@@ -11,7 +11,7 @@ use App\Http\Controllers\Admin\RecruitmentRouteController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use App\Http\Controllers\Admin\ApplicationInterviewController;
-
+use App\Http\Controllers\Admin\EmployeeAssignmentController;
 
 Route::inertia('/', 'welcome', [
     'canRegister' => Features::enabled(Features::registration()),
@@ -159,7 +159,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
 
+    Route::get('/admin/employees/{employee}/assignments/create', [EmployeeAssignmentController::class, 'create'])
+        ->name('admin.employees.assignments.create');
 
+    Route::post('/admin/employees/{employee}/assignments', [EmployeeAssignmentController::class, 'store'])
+        ->name('admin.employees.assignments.store');
     
 });
 

@@ -61,4 +61,9 @@ class Employee extends Model
     {
         return "{$this->last_name} {$this->first_name}";
     }
+
+    public function assignments()
+    {
+        return $this->hasMany(EmployeeAssignment::class);
+    }
 }

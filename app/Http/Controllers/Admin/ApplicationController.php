@@ -197,6 +197,7 @@ public function edit(Application $application): Response
             'jobPosting.employmentType',
             'recruitmentRoute',
             'referrerEmployee',
+            'employee',
             'statusHistories.changedBy',
         ]);
 
@@ -230,6 +231,7 @@ public function edit(Application $application): Response
     ]);
 }
 
+
 public function employeeCreate(Application $application): Response|RedirectResponse
 {
     $application->load([
@@ -259,5 +261,71 @@ public function employeeCreate(Application $application): Response|RedirectRespo
             ->orderBy('id')
             ->get(['id', 'name']),
     ]);
+}
+
+public function employeeRegister(Request $request, Application $application): RedirectResponse
+{
+    $application->load([
+        'candidate',
+        'jobPosting.department',
+        'jobPosting.employmentType',
+        'employee',
+    ]);
+
+    if ($application->status !== 'hired') {
+        return redirect()
+            ->route('admin.applications.show', $application)
+            ->with('error', '採用済みの応募のみ従業員登録できます。');
+    }
+
+    if ($application->employee_id) {
+        return redirect()
+            ->route('admin.applications.show', $application)
+            ->with('error', 'この応募は既に従業員登録済みです。');
+    }
+
+    $validated = $request->validate([
+        'employee_number' => ['required', 'string', 'max:50', 'unique:employees,employee_number'],
+        'position_id' => ['nullable', 'exists:positions,id'],
+        'joined_on' => ['required', 'date'],
+        'status' => ['required', 'in:active,on_leave,retired'],
+        'note' => ['nullable', 'string'],
+    ]);
+
+    $employee = Employee::create([
+        'department_id' => $application->jobPosting?->department_id,
+        'position_id' => $validated['position_id'] ?: null,
+        'employment_type_id' => $application->jobPosting?->employment_type_id,
+        'employee_number' => $validated['employee_number'],
+        'last_name' => $application->candidate->last_name,
+        'first_name' => $application->candidate->first_name,
+        'last_name_kana' => $application->candidate->last_name_kana,
+        'first_name_kana' => $application->candidate->first_name_kana,
+        'email' => $application->candidate->email,
+        'phone' => $application->candidate->phone,
+        'joined_on' => $validated['joined_on'],
+        'retired_on' => null,
+        'status' => $validated['status'],
+        'note' => $validated['note'] ?: null,
+    ]);
+
+    $employee->assignments()->create([
+        'department_id' => $employee->department_id,
+        'position_id' => $employee->position_id,
+        'employment_type_id' => $employee->employment_type_id,
+        'start_date' => $employee->joined_on,
+        'end_date' => null,
+        'change_reason' => '入社',
+        'note' => null,
+        'changed_by' => $request->user()->id,
+    ]);
+
+    $application->update([
+        'employee_id' => $employee->id,
+    ]);
+
+    return redirect()
+        ->route('admin.applications.show', $application)
+        ->with('success', '応募者を従業員登録しました。');
 }
 }

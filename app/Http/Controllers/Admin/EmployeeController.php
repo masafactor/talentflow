@@ -109,7 +109,18 @@ class EmployeeController extends Controller
         $validated['employment_type_id'] = $validated['employment_type_id'] ?: null;
         $validated['retired_on'] = $validated['retired_on'] ?: null;
 
-        Employee::create($validated);
+        $employee = Employee::create($validated);
+
+        $employee->assignments()->create([
+            'department_id' => $employee->department_id,
+            'position_id' => $employee->position_id,
+            'employment_type_id' => $employee->employment_type_id,
+            'start_date' => $employee->joined_on,
+            'end_date' => null,
+            'change_reason' => '入社',
+            'note' => null,
+            'changed_by' => $request->user()->id,
+        ]);
 
         return redirect()
             ->route('admin.employees.index')

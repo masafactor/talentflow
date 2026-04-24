@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use App\Http\Controllers\Admin\ApplicationInterviewController;
 use App\Http\Controllers\Admin\EmployeeAssignmentController;
+use App\Http\Controllers\Admin\EvaluationCycleController;
 
 Route::inertia('/', 'welcome', [
     'canRegister' => Features::enabled(Features::registration()),
@@ -123,6 +124,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/admin/applications/{application}', [ApplicationController::class, 'show'])
         ->name('admin.applications.show');
 
+    Route::get('/admin/applications/{application}/employee-create', [ApplicationController::class, 'employeeCreate'])
+    ->name('admin.applications.employee-create');
+    Route::post('/admin/applications/{application}/employee-register', [ApplicationController::class, 'employeeRegister'])
+    ->name('admin.applications.employee-register');
+
     Route::get('/admin/recruitment-routes', [RecruitmentRouteController::class, 'index'])
         ->name('admin.recruitment-routes.index');
 
@@ -156,6 +162,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::put('/admin/applications/{application}/interviews/{interview}', [ApplicationInterviewController::class, 'update'])
         ->name('admin.applications.interviews.update');
+    
 
 
 
@@ -164,7 +171,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('/admin/employees/{employee}/assignments', [EmployeeAssignmentController::class, 'store'])
         ->name('admin.employees.assignments.store');
-    
-});
+
+    Route::get('/admin/evaluation-cycles', [EvaluationCycleController::class, 'index'])
+    ->name('admin.evaluation-cycles.index');
+
+    Route::get('/admin/evaluation-cycles/create', [EvaluationCycleController::class, 'create'])
+        ->name('admin.evaluation-cycles.create');
+
+    Route::post('/admin/evaluation-cycles', [EvaluationCycleController::class, 'store'])
+        ->name('admin.evaluation-cycles.store');
+
+    Route::get('/admin/evaluation-cycles/{evaluationCycle}/edit', [EvaluationCycleController::class, 'edit'])
+        ->name('admin.evaluation-cycles.edit');
+
+    Route::put('/admin/evaluation-cycles/{evaluationCycle}', [EvaluationCycleController::class, 'update'])
+        ->name('admin.evaluation-cycles.update');
+        
+    });
 
 require __DIR__.'/settings.php';

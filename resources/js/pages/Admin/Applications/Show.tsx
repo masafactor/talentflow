@@ -19,6 +19,15 @@ type Application = {
     relationship_note: string | null;
     is_incentive_target: boolean;
     note: string | null;
+
+    employee_id: number | null;
+    employee: {
+        id: number;
+        employee_number: string;
+        last_name: string;
+        first_name: string;
+    } | null;
+
     candidate: {
         id: number;
         last_name: string;
@@ -54,6 +63,7 @@ type Application = {
         last_name: string;
         first_name: string;
     } | null;
+
 };
 
 type StatusHistory = {

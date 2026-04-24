@@ -66,4 +66,14 @@ class Employee extends Model
     {
         return $this->hasMany(EmployeeAssignment::class);
     }
+
+    public function evaluations()
+    {
+        return $this->hasMany(Evaluation::class);
+    }
+
+    public function reviewerEvaluations()
+    {
+        return $this->hasMany(EvaluationReviewer::class, 'reviewer_employee_id');
+    }
 }

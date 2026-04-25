@@ -52,7 +52,13 @@ export default function Index({ evaluationTemplates }: Props) {
                                     <td className="px-4 py-3">
                                         {template.is_active ? '有効' : '無効'}
                                     </td>
-                                    <td className="px-4 py-3">
+                                    <td className="px-4 py-3 space-x-3">
+                                        <Link
+                                        href={`/admin/evaluation-templates/${template.id}/items`}
+                                            className="text-sm text-sky-600 underline"
+                                        >
+                                            設問管理
+                                        </Link>
                                         <Link
                                             href={`/admin/evaluation-templates/${template.id}/edit`}
                                             className="text-sm text-blue-600 underline"

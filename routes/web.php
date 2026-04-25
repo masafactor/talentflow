@@ -201,6 +201,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::put('/admin/evaluation-templates/{evaluationTemplate}', [EvaluationTemplateController::class, 'update'])
         ->name('admin.evaluation-templates.update');
+
+    Route::get('/admin/evaluation-templates/{evaluationTemplate}/items', [EvaluationTemplateItemController::class, 'index'])
+    ->name('admin.evaluation-templates.items.index');
+
+    Route::get('/admin/evaluation-templates/{evaluationTemplate}/items/create', [EvaluationTemplateItemController::class, 'create'])
+        ->name('admin.evaluation-templates.items.create');
+
+    Route::post('/admin/evaluation-templates/{evaluationTemplate}/items', [EvaluationTemplateItemController::class, 'store'])
+        ->name('admin.evaluation-templates.items.store');
+
+    Route::get('/admin/evaluation-templates/{evaluationTemplate}/items/{item}/edit', [EvaluationTemplateItemController::class, 'edit'])
+        ->name('admin.evaluation-templates.items.edit');
+
+    Route::put('/admin/evaluation-templates/{evaluationTemplate}/items/{item}', [EvaluationTemplateItemController::class, 'update'])
+        ->name('admin.evaluation-templates.items.update');
         
     });
 

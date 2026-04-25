@@ -69,6 +69,11 @@ const mainNavItems: NavItem[] = [
         href: '/admin/evaluation-cycles',
         icon: ClipboardCheck,
     },
+    {
+    title: '評価テンプレート管理',
+    href: '/admin/evaluation-templates',
+    icon: ClipboardList,
+    },
     
 
 

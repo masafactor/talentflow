@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\EvaluationCycleController;
 use App\Http\Controllers\Admin\EvaluationTemplateController;
 use App\Http\Controllers\Admin\EvaluationTemplateItemController;
 use App\Http\Controllers\Admin\EvaluationController;
+use App\Http\Controllers\Admin\EvaluationReviewerController;
 
 Route::inertia('/', 'welcome', [
     'canRegister' => Features::enabled(Features::registration()),
@@ -221,7 +222,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('admin.evaluation-templates.items.update');
 
     Route::get('/admin/evaluations', [EvaluationController::class, 'index'])
-        ->name('admin.evaluations.index');
+    ->name('admin.evaluations.index');
 
     Route::get('/admin/evaluations/create', [EvaluationController::class, 'create'])
         ->name('admin.evaluations.create');
@@ -234,6 +235,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::put('/admin/evaluations/{evaluation}', [EvaluationController::class, 'update'])
         ->name('admin.evaluations.update');
+    Route::get('/admin/evaluations/{evaluation}/reviewers', [EvaluationReviewerController::class, 'index'])
+    ->name('admin.evaluations.reviewers.index');
+
+    Route::get('/admin/evaluations/{evaluation}/reviewers/create', [EvaluationReviewerController::class, 'create'])
+        ->name('admin.evaluations.reviewers.create');
+
+    Route::post('/admin/evaluations/{evaluation}/reviewers', [EvaluationReviewerController::class, 'store'])
+        ->name('admin.evaluations.reviewers.store');
+
+    Route::get('/admin/evaluations/{evaluation}/reviewers/{reviewer}/edit', [EvaluationReviewerController::class, 'edit'])
+        ->name('admin.evaluations.reviewers.edit');
+
+    Route::put('/admin/evaluations/{evaluation}/reviewers/{reviewer}', [EvaluationReviewerController::class, 'update'])
+        ->name('admin.evaluations.reviewers.update');
+
         
     });
 

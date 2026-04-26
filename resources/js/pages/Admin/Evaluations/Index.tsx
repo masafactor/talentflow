@@ -73,7 +73,14 @@ export default function Index({ evaluations }: Props) {
                                     </td>
                                     <td className="px-4 py-3">{evaluation.template.name}</td>
                                     <td className="px-4 py-3">{statusLabels[evaluation.status]}</td>
-                                    <td className="px-4 py-3">
+                                    <td className="px-4 py-3 space-x-3">
+
+                                        <Link
+                                            href={`/admin/evaluations/${evaluation.id}/reviewers`}
+                                            className="text-sm text-sky-600 underline"
+                                        >
+                                            評価者割当
+                                        </Link>
                                         <Link
                                             href={`/admin/evaluations/${evaluation.id}/edit`}
                                             className="text-sm text-blue-600 underline"

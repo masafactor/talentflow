@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { BookOpen, Briefcase, BriefcaseBusiness, ClipboardCheck, FileUser, FolderGit2, IdCard, LayoutGrid, Route, UserRoundSearch, Users,ClipboardList } from 'lucide-react';
+import { BookOpen, Briefcase, BriefcaseBusiness, ClipboardCheck, FileUser, FolderGit2, IdCard, LayoutGrid, Route, UserRoundSearch, Users,ClipboardList, UsersRound } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -73,6 +73,11 @@ const mainNavItems: NavItem[] = [
     title: '評価テンプレート管理',
     href: '/admin/evaluation-templates',
     icon: ClipboardList,
+    },
+    {
+    title: '評価設定管理',
+    href: '/admin/evaluations',
+    icon: UsersRound,
     },
     
 

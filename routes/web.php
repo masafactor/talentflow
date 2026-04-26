@@ -13,6 +13,9 @@ use Laravel\Fortify\Features;
 use App\Http\Controllers\Admin\ApplicationInterviewController;
 use App\Http\Controllers\Admin\EmployeeAssignmentController;
 use App\Http\Controllers\Admin\EvaluationCycleController;
+use App\Http\Controllers\Admin\EvaluationTemplateController;
+use App\Http\Controllers\Admin\EvaluationTemplateItemController;
+use App\Http\Controllers\Admin\EvaluationController;
 
 Route::inertia('/', 'welcome', [
     'canRegister' => Features::enabled(Features::registration()),
@@ -216,7 +219,24 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::put('/admin/evaluation-templates/{evaluationTemplate}/items/{item}', [EvaluationTemplateItemController::class, 'update'])
         ->name('admin.evaluation-templates.items.update');
+
+    Route::get('/admin/evaluations', [EvaluationController::class, 'index'])
+        ->name('admin.evaluations.index');
+
+    Route::get('/admin/evaluations/create', [EvaluationController::class, 'create'])
+        ->name('admin.evaluations.create');
+
+    Route::post('/admin/evaluations', [EvaluationController::class, 'store'])
+        ->name('admin.evaluations.store');
+
+    Route::get('/admin/evaluations/{evaluation}/edit', [EvaluationController::class, 'edit'])
+        ->name('admin.evaluations.edit');
+
+    Route::put('/admin/evaluations/{evaluation}', [EvaluationController::class, 'update'])
+        ->name('admin.evaluations.update');
         
     });
+
+
 
 require __DIR__.'/settings.php';

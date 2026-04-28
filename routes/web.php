@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\EvaluationTemplateController;
 use App\Http\Controllers\Admin\EvaluationTemplateItemController;
 use App\Http\Controllers\Admin\EvaluationController;
 use App\Http\Controllers\Admin\EvaluationReviewerController;
+use App\Http\Controllers\Admin\EvaluationAnswerController;
 
 Route::inertia('/', 'welcome', [
     'canRegister' => Features::enabled(Features::registration()),
@@ -249,6 +250,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::put('/admin/evaluations/{evaluation}/reviewers/{reviewer}', [EvaluationReviewerController::class, 'update'])
         ->name('admin.evaluations.reviewers.update');
+
+    Route::get('/admin/evaluations/{evaluation}/reviewers/{reviewer}/answer', [EvaluationAnswerController::class, 'edit'])
+    ->name('admin.evaluations.reviewers.answer');
+
+    Route::post('/admin/evaluations/{evaluation}/reviewers/{reviewer}/answer', [EvaluationAnswerController::class, 'update'])
+    ->name('admin.evaluations.reviewers.answer.update');
 
         
     });

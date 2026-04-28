@@ -104,7 +104,13 @@ export default function Index({ evaluation, reviewers }: Props) {
                                     <td className="px-4 py-3">{reviewerTypeLabels[reviewer.reviewer_type]}</td>
                                     <td className="px-4 py-3">{statusLabels[reviewer.status]}</td>
                                     <td className="px-4 py-3">{reviewer.submitted_at ?? '-'}</td>
-                                    <td className="px-4 py-3">
+                                    <td className="px-4 py-3 space-x-3">
+                                        <Link
+                                            href={`/admin/evaluations/${evaluation.id}/reviewers/${reviewer.id}/answer`}
+                                            className="text-sm text-sky-600 underline"
+                                        >
+                                            回答
+                                        </Link>
                                         <Link
                                             href={`/admin/evaluations/${evaluation.id}/reviewers/${reviewer.id}/edit`}
                                             className="text-sm text-blue-600 underline"

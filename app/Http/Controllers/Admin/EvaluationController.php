@@ -107,4 +107,74 @@ class EvaluationController extends Controller
             ->route('admin.evaluations.index')
             ->with('success', '評価設定を更新しました。');
     }
+
+    public function show(Evaluation $evaluation): Response
+    {
+        $evaluation->load([
+            'cycle',
+            'employee.department',
+            'employee.position',
+            'template.items',
+            'reviewers.reviewerEmployee',
+            'reviewers.answers.templateItem',
+        ]);
+
+        $scoreReviewers = $evaluation->reviewers->map(function ($reviewer) {
+            $scoreAnswers = $reviewer->answers
+                ->filter(fn ($answer) => $answer->templateItem && $answer->templateItem->input_type === 'score' && $answer->score_value !== null);
+
+            $average = $scoreAnswers->count() > 0
+                ? round($scoreAnswers->avg('score_value'), 2)
+                : null;
+
+            return [
+                'id' => $reviewer->id,
+                'reviewer_type' => $reviewer->reviewer_type,
+                'status' => $reviewer->status,
+                'submitted_at' => $reviewer->submitted_at,
+                'reviewer_employee' => $reviewer->reviewerEmployee,
+                'average_score' => $average,
+                'answers' => $reviewer->answers,
+            ];
+        });
+
+        $typeAverages = collect(['manager', 'peer', 'subordinate', 'self'])->mapWithKeys(function ($type) use ($scoreReviewers) {
+            $filtered = $scoreReviewers
+                ->where('reviewer_type', $type)
+                ->pluck('average_score')
+                ->filter(fn ($value) => $value !== null);
+
+            return [
+                $type => $filtered->count() > 0 ? round($filtered->avg(), 2) : null,
+            ];
+        });
+
+        $itemSummaries = $evaluation->template->items->map(function ($item) use ($evaluation) {
+            $scoreAnswers = $evaluation->reviewers
+                ->flatMap(function ($reviewer) use ($item) {
+                    return $reviewer->answers->filter(function ($answer) use ($item) {
+                        return $answer->evaluation_template_item_id === $item->id
+                            && $answer->score_value !== null;
+                    });
+                });
+
+            return [
+                'id' => $item->id,
+                'category' => $item->category,
+                'question' => $item->question,
+                'input_type' => $item->input_type,
+                'average_score' => $scoreAnswers->count() > 0
+                    ? round($scoreAnswers->avg('score_value'), 2)
+                    : null,
+                'answer_count' => $scoreAnswers->count(),
+            ];
+        });
+
+        return Inertia::render('Admin/Evaluations/Show', [
+            'evaluation' => $evaluation,
+            'typeAverages' => $typeAverages,
+            'itemSummaries' => $itemSummaries,
+            'reviewerResults' => $scoreReviewers,
+        ]);
+    }
 }

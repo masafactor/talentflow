@@ -236,6 +236,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::put('/admin/evaluations/{evaluation}', [EvaluationController::class, 'update'])
         ->name('admin.evaluations.update');
+
+    Route::get('/admin/evaluations/{evaluation}', [EvaluationController::class, 'show'])
+    ->name('admin.evaluations.show');
+
+
+    
     Route::get('/admin/evaluations/{evaluation}/reviewers', [EvaluationReviewerController::class, 'index'])
     ->name('admin.evaluations.reviewers.index');
 
@@ -256,6 +262,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('/admin/evaluations/{evaluation}/reviewers/{reviewer}/answer', [EvaluationAnswerController::class, 'update'])
     ->name('admin.evaluations.reviewers.answer.update');
+
+
+
 
         
     });

@@ -108,6 +108,8 @@ class EvaluationController extends Controller
             ->with('success', '評価設定を更新しました。');
     }
 
+
+
     public function show(Evaluation $evaluation): Response
     {
         $evaluation->load([
@@ -149,6 +151,22 @@ class EvaluationController extends Controller
             ];
         });
 
+        $selfAverage = $typeAverages['self'];
+
+        $otherAverageValues = $scoreReviewers
+            ->whereIn('reviewer_type', ['manager', 'peer', 'subordinate'])
+            ->pluck('average_score')
+            ->filter(fn ($value) => $value !== null);
+
+        $othersAverage = $otherAverageValues->count() > 0
+            ? round($otherAverageValues->avg(), 2)
+            : null;
+
+        $overallGap = null;
+        if ($selfAverage !== null && $othersAverage !== null) {
+            $overallGap = round($selfAverage - $othersAverage, 2);
+        }
+
         $itemSummaries = $evaluation->template->items->map(function ($item) use ($evaluation) {
             $scoreAnswers = $evaluation->reviewers
                 ->flatMap(function ($reviewer) use ($item) {
@@ -157,6 +175,37 @@ class EvaluationController extends Controller
                             && $answer->score_value !== null;
                     });
                 });
+
+            $selfAnswers = $evaluation->reviewers
+                ->where('reviewer_type', 'self')
+                ->flatMap(function ($reviewer) use ($item) {
+                    return $reviewer->answers->filter(function ($answer) use ($item) {
+                        return $answer->evaluation_template_item_id === $item->id
+                            && $answer->score_value !== null;
+                    });
+                });
+
+            $otherAnswers = $evaluation->reviewers
+                ->whereIn('reviewer_type', ['manager', 'peer', 'subordinate'])
+                ->flatMap(function ($reviewer) use ($item) {
+                    return $reviewer->answers->filter(function ($answer) use ($item) {
+                        return $answer->evaluation_template_item_id === $item->id
+                            && $answer->score_value !== null;
+                    });
+                });
+
+            $selfAverage = $selfAnswers->count() > 0
+                ? round($selfAnswers->avg('score_value'), 2)
+                : null;
+
+            $othersAverage = $otherAnswers->count() > 0
+                ? round($otherAnswers->avg('score_value'), 2)
+                : null;
+
+            $gap = null;
+            if ($selfAverage !== null && $othersAverage !== null) {
+                $gap = round($selfAverage - $othersAverage, 2);
+            }
 
             return [
                 'id' => $item->id,
@@ -167,6 +216,9 @@ class EvaluationController extends Controller
                     ? round($scoreAnswers->avg('score_value'), 2)
                     : null,
                 'answer_count' => $scoreAnswers->count(),
+                'self_average' => $selfAverage,
+                'others_average' => $othersAverage,
+                'gap' => $gap,
             ];
         });
 
@@ -175,6 +227,11 @@ class EvaluationController extends Controller
             'typeAverages' => $typeAverages,
             'itemSummaries' => $itemSummaries,
             'reviewerResults' => $scoreReviewers,
+            'gapSummary' => [
+                'self_average' => $selfAverage,
+                'others_average' => $othersAverage,
+                'overall_gap' => $overallGap,
+            ],
         ]);
     }
 }

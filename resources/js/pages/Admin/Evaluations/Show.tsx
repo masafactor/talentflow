@@ -61,6 +61,9 @@ type ItemSummary = {
     input_type: 'score' | 'text';
     average_score: number | null;
     answer_count: number;
+    self_average: number | null;
+    others_average: number | null;
+    gap: number | null;
 };
 
 type Props = {
@@ -73,6 +76,11 @@ type Props = {
     };
     itemSummaries: ItemSummary[];
     reviewerResults: ReviewerResult[];
+    gapSummary: {
+        self_average: number | null;
+        others_average: number | null;
+        overall_gap: number | null;
+    };
 };
 
 const statusLabels: Record<Evaluation['status'], string> = {
@@ -93,6 +101,7 @@ export default function Show({
     typeAverages,
     itemSummaries,
     reviewerResults,
+    gapSummary,
 }: Props) {
     return (
         <AppLayout>
@@ -169,6 +178,29 @@ export default function Show({
                         <h2 className="text-lg font-semibold">区分別平均</h2>
                     </div>
 
+                    <div className="mt-8 rounded-lg border">
+    <div className="border-b px-4 py-3">
+        <h2 className="text-lg font-semibold">自己評価と他者評価の差分</h2>
+    </div>
+
+    <div className="grid grid-cols-1 md:grid-cols-3">
+        <div className="border-b p-4 md:border-r">
+            <div className="text-sm text-gray-500">自己評価平均</div>
+            <div className="mt-1 text-xl font-semibold">{gapSummary.self_average ?? '-'}</div>
+        </div>
+        <div className="border-b p-4 md:border-r">
+            <div className="text-sm text-gray-500">他者平均</div>
+            <div className="mt-1 text-xl font-semibold">{gapSummary.others_average ?? '-'}</div>
+        </div>
+        <div className="border-b p-4">
+            <div className="text-sm text-gray-500">差分（自己 - 他者）</div>
+            <div className="mt-1 text-xl font-semibold">
+                {gapSummary.overall_gap ?? '-'}
+            </div>
+        </div>
+    </div>
+                    </div>
+
                     <div className="grid grid-cols-2 md:grid-cols-4">
                         <div className="border-b p-4 md:border-r">
                             <div className="text-sm text-gray-500">上司</div>
@@ -189,42 +221,58 @@ export default function Show({
                     </div>
                 </div>
 
-                <div className="mt-8 rounded-lg border">
-                    <div className="border-b px-4 py-3">
-                        <h2 className="text-lg font-semibold">設問別平均</h2>
-                    </div>
+              <div className="mt-8 rounded-lg border">
+    <div className="border-b px-4 py-3">
+        <h2 className="text-lg font-semibold">設問別平均</h2>
+    </div>
 
-                    <table className="w-full text-left text-sm">
-                        <thead className="bg-gray-50">
-                            <tr>
-                                <th className="px-4 py-3">カテゴリ</th>
-                                <th className="px-4 py-3">設問</th>
-                                <th className="px-4 py-3">入力形式</th>
-                                <th className="px-4 py-3">平均点</th>
-                                <th className="px-4 py-3">回答数</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {itemSummaries.map((item) => (
-                                <tr key={item.id} className="border-t">
-                                    <td className="px-4 py-3">{item.category ?? '-'}</td>
-                                    <td className="px-4 py-3">{item.question}</td>
-                                    <td className="px-4 py-3">{item.input_type === 'score' ? '点数' : '自由記述'}</td>
-                                    <td className="px-4 py-3">{item.input_type === 'score' ? (item.average_score ?? '-') : '-'}</td>
-                                    <td className="px-4 py-3">{item.answer_count}</td>
-                                </tr>
-                            ))}
+    <table className="w-full text-left text-sm">
+        <thead className="bg-gray-50">
+            <tr>
+                <th className="px-4 py-3">カテゴリ</th>
+                <th className="px-4 py-3">設問</th>
+                <th className="px-4 py-3">入力形式</th>
+                <th className="px-4 py-3">全体平均</th>
+                <th className="px-4 py-3">自己評価</th>
+                <th className="px-4 py-3">他者平均</th>
+                <th className="px-4 py-3">差分</th>
+                <th className="px-4 py-3">回答数</th>
+            </tr>
+        </thead>
+        <tbody>
+            {itemSummaries.map((item) => (
+                <tr key={item.id} className="border-t">
+                    <td className="px-4 py-3">{item.category ?? '-'}</td>
+                    <td className="px-4 py-3">{item.question}</td>
+                    <td className="px-4 py-3">
+                        {item.input_type === 'score' ? '点数' : '自由記述'}
+                    </td>
+                    <td className="px-4 py-3">
+                        {item.input_type === 'score' ? (item.average_score ?? '-') : '-'}
+                    </td>
+                    <td className="px-4 py-3">
+                        {item.input_type === 'score' ? (item.self_average ?? '-') : '-'}
+                    </td>
+                    <td className="px-4 py-3">
+                        {item.input_type === 'score' ? (item.others_average ?? '-') : '-'}
+                    </td>
+                    <td className="px-4 py-3">
+                        {item.input_type === 'score' ? (item.gap ?? '-') : '-'}
+                    </td>
+                    <td className="px-4 py-3">{item.answer_count}</td>
+                </tr>
+            ))}
 
-                            {itemSummaries.length === 0 && (
-                                <tr>
-                                    <td colSpan={5} className="px-4 py-6 text-center text-gray-500">
-                                        設問がありません。
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
+            {itemSummaries.length === 0 && (
+                <tr>
+                    <td colSpan={8} className="px-4 py-6 text-center text-gray-500">
+                        設問がありません。
+                    </td>
+                </tr>
+            )}
+        </tbody>
+    </table>
+              </div>
 
                 <div className="mt-8 rounded-lg border">
                     <div className="border-b px-4 py-3">

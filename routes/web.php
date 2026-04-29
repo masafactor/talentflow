@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\EvaluationTemplateItemController;
 use App\Http\Controllers\Admin\EvaluationController;
 use App\Http\Controllers\Admin\EvaluationReviewerController;
 use App\Http\Controllers\Admin\EvaluationAnswerController;
+use App\Http\Controllers\Admin\EvaluationFeedbackController;
 
 Route::inertia('/', 'welcome', [
     'canRegister' => Features::enabled(Features::registration()),
@@ -262,6 +263,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('/admin/evaluations/{evaluation}/reviewers/{reviewer}/answer', [EvaluationAnswerController::class, 'update'])
     ->name('admin.evaluations.reviewers.answer.update');
+
+    Route::get('/admin/evaluations/{evaluation}/feedbacks', [EvaluationFeedbackController::class, 'index'])
+    ->name('admin.evaluations.feedbacks.index');
+
+    Route::get('/admin/evaluations/{evaluation}/feedbacks/create', [EvaluationFeedbackController::class, 'create'])
+        ->name('admin.evaluations.feedbacks.create');
+
+    Route::post('/admin/evaluations/{evaluation}/feedbacks', [EvaluationFeedbackController::class, 'store'])
+        ->name('admin.evaluations.feedbacks.store');
+
+    Route::get('/admin/evaluations/{evaluation}/feedbacks/{feedback}/edit', [EvaluationFeedbackController::class, 'edit'])
+        ->name('admin.evaluations.feedbacks.edit');
+
+    Route::put('/admin/evaluations/{evaluation}/feedbacks/{feedback}', [EvaluationFeedbackController::class, 'update'])
+        ->name('admin.evaluations.feedbacks.update');
 
 
 

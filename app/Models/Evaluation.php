@@ -39,4 +39,9 @@ class Evaluation extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+
+    public function feedbacks()
+    {
+        return $this->hasMany(EvaluationFeedback::class)->orderByDesc('feedback_date')->orderByDesc('id');
+    }
 }

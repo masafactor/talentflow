@@ -126,6 +126,12 @@ export default function Show({
 
                     <div className="flex gap-3">
                         <Link
+                            href={`/admin/evaluations/${evaluation.id}/feedbacks`}
+                            className="rounded-md border px-4 py-2 text-sm"
+                        >
+                            フィードバック記録
+                        </Link>
+                        <Link
                             href={`/admin/evaluations/${evaluation.id}/reviewers`}
                             className="rounded-md border px-4 py-2 text-sm"
                         >

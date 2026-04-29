@@ -66,6 +66,15 @@ type ItemSummary = {
     gap: number | null;
 };
 
+type CategorySummary = {
+    category: string;
+    overall_average: number | null;
+    self_average: number | null;
+    others_average: number | null;
+    gap: number | null;
+    item_count: number;
+};
+
 type Props = {
     evaluation: Evaluation;
     typeAverages: {
@@ -81,6 +90,7 @@ type Props = {
         others_average: number | null;
         overall_gap: number | null;
     };
+    categorySummaries: CategorySummary[];
 };
 
 const statusLabels: Record<Evaluation['status'], string> = {
@@ -96,12 +106,15 @@ const reviewerTypeLabels: Record<ReviewerResult['reviewer_type'], string> = {
     self: '自己評価',
 };
 
+
+
 export default function Show({
     evaluation,
     typeAverages,
     itemSummaries,
     reviewerResults,
     gapSummary,
+    categorySummaries,
 }: Props) {
     return (
         <AppLayout>
@@ -222,57 +235,96 @@ export default function Show({
                 </div>
 
               <div className="mt-8 rounded-lg border">
-    <div className="border-b px-4 py-3">
-        <h2 className="text-lg font-semibold">設問別平均</h2>
-    </div>
+                <div className="border-b px-4 py-3">
+                    <h2 className="text-lg font-semibold">設問別平均</h2>
+                </div>
 
-    <table className="w-full text-left text-sm">
-        <thead className="bg-gray-50">
-            <tr>
-                <th className="px-4 py-3">カテゴリ</th>
-                <th className="px-4 py-3">設問</th>
-                <th className="px-4 py-3">入力形式</th>
-                <th className="px-4 py-3">全体平均</th>
-                <th className="px-4 py-3">自己評価</th>
-                <th className="px-4 py-3">他者平均</th>
-                <th className="px-4 py-3">差分</th>
-                <th className="px-4 py-3">回答数</th>
-            </tr>
-        </thead>
-        <tbody>
-            {itemSummaries.map((item) => (
-                <tr key={item.id} className="border-t">
-                    <td className="px-4 py-3">{item.category ?? '-'}</td>
-                    <td className="px-4 py-3">{item.question}</td>
-                    <td className="px-4 py-3">
-                        {item.input_type === 'score' ? '点数' : '自由記述'}
-                    </td>
-                    <td className="px-4 py-3">
-                        {item.input_type === 'score' ? (item.average_score ?? '-') : '-'}
-                    </td>
-                    <td className="px-4 py-3">
-                        {item.input_type === 'score' ? (item.self_average ?? '-') : '-'}
-                    </td>
-                    <td className="px-4 py-3">
-                        {item.input_type === 'score' ? (item.others_average ?? '-') : '-'}
-                    </td>
-                    <td className="px-4 py-3">
-                        {item.input_type === 'score' ? (item.gap ?? '-') : '-'}
-                    </td>
-                    <td className="px-4 py-3">{item.answer_count}</td>
-                </tr>
-            ))}
+                <table className="w-full text-left text-sm">
+                    <thead className="bg-gray-50">
+                        <tr>
+                            <th className="px-4 py-3">カテゴリ</th>
+                            <th className="px-4 py-3">設問</th>
+                            <th className="px-4 py-3">入力形式</th>
+                            <th className="px-4 py-3">全体平均</th>
+                            <th className="px-4 py-3">自己評価</th>
+                            <th className="px-4 py-3">他者平均</th>
+                            <th className="px-4 py-3">差分</th>
+                            <th className="px-4 py-3">回答数</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {itemSummaries.map((item) => (
+                            <tr key={item.id} className="border-t">
+                                <td className="px-4 py-3">{item.category ?? '-'}</td>
+                                <td className="px-4 py-3">{item.question}</td>
+                                <td className="px-4 py-3">
+                                    {item.input_type === 'score' ? '点数' : '自由記述'}
+                                </td>
+                                <td className="px-4 py-3">
+                                    {item.input_type === 'score' ? (item.average_score ?? '-') : '-'}
+                                </td>
+                                <td className="px-4 py-3">
+                                    {item.input_type === 'score' ? (item.self_average ?? '-') : '-'}
+                                </td>
+                                <td className="px-4 py-3">
+                                    {item.input_type === 'score' ? (item.others_average ?? '-') : '-'}
+                                </td>
+                                <td className="px-4 py-3">
+                                    {item.input_type === 'score' ? (item.gap ?? '-') : '-'}
+                                </td>
+                                <td className="px-4 py-3">{item.answer_count}</td>
+                            </tr>
+                        ))}
 
-            {itemSummaries.length === 0 && (
-                <tr>
-                    <td colSpan={8} className="px-4 py-6 text-center text-gray-500">
-                        設問がありません。
-                    </td>
-                </tr>
-            )}
-        </tbody>
-    </table>
+                        {itemSummaries.length === 0 && (
+                            <tr>
+                                <td colSpan={8} className="px-4 py-6 text-center text-gray-500">
+                                    設問がありません。
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
               </div>
+
+              <div className="mt-8 rounded-lg border">
+                <div className="border-b px-4 py-3">
+                    <h2 className="text-lg font-semibold">カテゴリ別集計</h2>
+                </div>
+
+                    <table className="w-full text-left text-sm">
+                        <thead className="bg-gray-50">
+                            <tr>
+                                <th className="px-4 py-3">カテゴリ</th>
+                                <th className="px-4 py-3">全体平均</th>
+                                <th className="px-4 py-3">自己評価</th>
+                                <th className="px-4 py-3">他者平均</th>
+                                <th className="px-4 py-3">差分</th>
+                                <th className="px-4 py-3">設問数</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {categorySummaries.map((category) => (
+                                <tr key={category.category} className="border-t">
+                                    <td className="px-4 py-3">{category.category}</td>
+                                    <td className="px-4 py-3">{category.overall_average ?? '-'}</td>
+                                    <td className="px-4 py-3">{category.self_average ?? '-'}</td>
+                                    <td className="px-4 py-3">{category.others_average ?? '-'}</td>
+                                    <td className="px-4 py-3">{category.gap ?? '-'}</td>
+                                    <td className="px-4 py-3">{category.item_count}</td>
+                                </tr>
+                            ))}
+
+                            {categorySummaries.length === 0 && (
+                                <tr>
+                                    <td colSpan={6} className="px-4 py-6 text-center text-gray-500">
+                                        カテゴリ別集計データがありません。
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
 
                 <div className="mt-8 rounded-lg border">
                     <div className="border-b px-4 py-3">

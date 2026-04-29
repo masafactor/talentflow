@@ -222,6 +222,34 @@ class EvaluationController extends Controller
             ];
         });
 
+        $categorySummaries = $itemSummaries
+            ->filter(fn ($item) => $item['input_type'] === 'score')
+            ->groupBy(fn ($item) => $item['category'] ?: 'カテゴリなし')
+            ->map(function ($items, $category) {
+                $overallScores = collect($items)->pluck('average_score')->filter(fn ($v) => $v !== null);
+                $selfScores = collect($items)->pluck('self_average')->filter(fn ($v) => $v !== null);
+                $othersScores = collect($items)->pluck('others_average')->filter(fn ($v) => $v !== null);
+
+                $overallAverage = $overallScores->count() > 0 ? round($overallScores->avg(), 2) : null;
+                $selfAverage = $selfScores->count() > 0 ? round($selfScores->avg(), 2) : null;
+                $othersAverage = $othersScores->count() > 0 ? round($othersScores->avg(), 2) : null;
+
+                $gap = null;
+                if ($selfAverage !== null && $othersAverage !== null) {
+                    $gap = round($selfAverage - $othersAverage, 2);
+                }
+
+                return [
+                    'category' => $category,
+                    'overall_average' => $overallAverage,
+                    'self_average' => $selfAverage,
+                    'others_average' => $othersAverage,
+                    'gap' => $gap,
+                    'item_count' => count($items),
+                ];
+            })
+            ->values();
+
         return Inertia::render('Admin/Evaluations/Show', [
             'evaluation' => $evaluation,
             'typeAverages' => $typeAverages,
@@ -232,6 +260,8 @@ class EvaluationController extends Controller
                 'others_average' => $othersAverage,
                 'overall_gap' => $overallGap,
             ],
+            'categorySummaries' => $categorySummaries,
+
         ]);
     }
 }

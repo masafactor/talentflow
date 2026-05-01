@@ -76,4 +76,11 @@ class Employee extends Model
     {
         return $this->hasMany(EvaluationReviewer::class, 'reviewer_employee_id');
     }
+
+    public function interviews()
+    {
+        return $this->hasMany(EmployeeInterview::class)
+            ->orderByDesc('interview_date')
+            ->orderByDesc('id');
+    }
 }

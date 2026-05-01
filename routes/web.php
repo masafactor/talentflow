@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\EvaluationController;
 use App\Http\Controllers\Admin\EvaluationReviewerController;
 use App\Http\Controllers\Admin\EvaluationAnswerController;
 use App\Http\Controllers\Admin\EvaluationFeedbackController;
+use App\Http\Controllers\Admin\EmployeeInterviewController;
 
 Route::inertia('/', 'welcome', [
     'canRegister' => Features::enabled(Features::registration()),
@@ -278,6 +279,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::put('/admin/evaluations/{evaluation}/feedbacks/{feedback}', [EvaluationFeedbackController::class, 'update'])
         ->name('admin.evaluations.feedbacks.update');
+
+    Route::get('/admin/employees/{employee}/interviews', [EmployeeInterviewController::class, 'index'])
+    ->name('admin.employees.interviews.index');
+
+    Route::get('/admin/employees/{employee}/interviews/create', [EmployeeInterviewController::class, 'create'])
+        ->name('admin.employees.interviews.create');
+
+    Route::post('/admin/employees/{employee}/interviews', [EmployeeInterviewController::class, 'store'])
+        ->name('admin.employees.interviews.store');
+
+    Route::get('/admin/employees/{employee}/interviews/{interview}/edit', [EmployeeInterviewController::class, 'edit'])
+        ->name('admin.employees.interviews.edit');
+
+    Route::put('/admin/employees/{employee}/interviews/{interview}', [EmployeeInterviewController::class, 'update'])
+        ->name('admin.employees.interviews.update');
 
 
 

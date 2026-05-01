@@ -63,6 +63,12 @@ export default function Show({ employee ,assignments}: Props) {
 
                     <div className="flex gap-3">
                         <Link
+                            href={`/admin/employees/${employee.id}/interviews`}
+                            className="rounded-md border px-4 py-2 text-sm"
+                        >
+                            面談記録
+                        </Link>
+                        <Link
                             href={`/admin/employees/${employee.id}/assignments/create`}
                             className="rounded-md border px-4 py-2 text-sm"
                         >
